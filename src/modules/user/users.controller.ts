@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
 import { User } from './users.schema';
@@ -11,18 +11,16 @@ export class UsersController {
 
 
   @Get()
-  findAll(@Req() request: Request): any[] {
-    return [{ id: 1, name: 'Harry Potter' }];
+  async findAll(@Req() request: Request): Promise<User[]> {
+    return await this.usersService.findAll();
   }
 
   @Post()
-  async create(): Promise<any> {
-    const obj = await this.usersService.create({
-      name: 'Lily Aldrin',
-      email: 'lily@gmail.com',
-      age: 28,
+  async create(@Body() user: User): Promise<any> {
+    return await this.usersService.create({
+      name: user.name,
+      email: user.email,
+      age: user.age
     });
-    console.log(obj);
-    return obj;
   }
 }
